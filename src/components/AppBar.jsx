@@ -16,8 +16,8 @@ const styles = StyleSheet.create({
 
 const onPressHandler = (event) => {
 	event.preventDefault();
-	console.log('Tabia painettu!')
-}
+	console.log('Tabia painettu!');
+};
 
 const AppBar = () => {
   return <View style={styles.container}>
