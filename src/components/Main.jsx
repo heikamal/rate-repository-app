@@ -15,17 +15,13 @@ const styles = StyleSheet.create({
 
 const Main = () => {
 
-  const onSubmit = (values) => {
-    console.log(values);
-  };
-
   return (
     <View style={styles.container}>
 	<AppBar />
 	<Routes>
 		<Route path='/' element={<RepositoryList />} exact />
 		<Route path='*' element={<Navigate to='/' replace />} />
-		<Route path='/signin' element={<SignIn onSubmit={onSubmit} />} exact/>
+		<Route path='/signin' element={<SignIn />} exact/>
 	</Routes>
     </View>
   );
