@@ -9,6 +9,7 @@ const theme = {
 		repoItemBackground: '#f8f8ff',
 		textBoxBorder: '#696969',
 		textBoxText: '#808080',
+		error: '#ff0000',
 	},
 	fontSizes: {
 		body: 14,
