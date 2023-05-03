@@ -7,7 +7,6 @@ import { useApolloClient, useQuery } from '@apollo/client';
 import { ME } from '../../graphql/queries';
 import { useAuthStorage } from '../../hooks/useAuthStorage';
 import Text from '../Text';
-import { Link } from 'react-router-native';
 
 const styles = StyleSheet.create({
   container: {
