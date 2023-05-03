@@ -1,6 +1,6 @@
 import { View, StyleSheet, Image } from "react-native";
-import Text from "./Text";
-import theme from "../theme";
+import Text from "../Text";
+import theme from "../../theme";
 
 const RepositoryItem = ({ item }) => {
 
