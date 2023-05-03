@@ -34,7 +34,6 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 5,
     borderWidth: 1,
-    borderColor: theme.colors.textBoxBorder,
     borderRadius: 5,
     color: theme.colors.textBoxText,
   },
