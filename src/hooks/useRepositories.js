@@ -10,6 +10,6 @@ const useRepositories = () => {
 	const loading = response.loading;
 
   return { repositories, loading };
-}
+};
 
 export default useRepositories;
