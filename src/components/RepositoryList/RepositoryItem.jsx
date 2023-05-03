@@ -72,7 +72,7 @@ const RepositoryItem = ({ item }) => {
 	});
 
 	return (
-		<View style={style.card}>
+		<View testID="repositoryItem" style={style.card}>
 			<View style={style.imgInforContainer}>
 				<View style={style.imgContainer} >
 					<Image 
