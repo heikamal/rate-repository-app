@@ -1,8 +1,84 @@
-import { View, StyleSheet, Image } from "react-native";
+import { View, StyleSheet, Image, Pressable } from "react-native";
 import Text from "../Text";
 import theme from "../../theme";
+import useRepository from "../../hooks/useRepository";
+import { useNavigate, useParams } from "react-router-native";
+import * as Linking from 'expo-linking';
 
-const RepositoryItem = ({ item }) => {
+
+const style = StyleSheet.create({
+	card: {
+		backgroundColor: theme.colors.repoItemBackground,
+		padding: 10,
+		flexDirection: 'column'
+	},
+	imgInforContainer: {
+		flexDirection: 'row',
+		marginBottom: 10,
+	},
+	imgContainer: {
+		maxWidth: 60,
+		maxHeight: 60,
+	},
+	img: {
+		width: 50,
+		height: 50,
+		borderRadius: 5,
+		marginRight: 10,
+	},
+	infoContainer: {
+		display: "flex",
+		flexDirection: 'column',
+		alignItems: 'flex-start',
+		flexShrink: 1,
+	},
+	nameContainer: {
+		flexGrow: 0,
+		marginBottom: 5,
+	},
+	name: {
+		fontSize: theme.fontSizes.subheading,
+		fontWeight: 'bold',
+	},
+	descContainer: {
+		marginBottom: 5,
+	},
+	langTagContainer: {
+		flex: 1,
+		backgroundColor: theme.colors.primary,
+		alignItems: 'center', 
+		justifyContent: 'center',
+		padding: 3,
+		borderRadius: 4,
+	},
+	langTag: {
+		fontSize: theme.fontSizes.body,
+		color: theme.colors.appBarText, 
+	},
+	statsContainer: {
+		flexDirection: 'row',
+		justifyContent: 'space-evenly',
+	},
+	statItem: {
+		flexDirection: 'column',
+		alignItems: 'center',
+	},
+	button: {
+		backgroundColor: theme.colors.primary,
+		alignItems: 'center', 
+		justifyContent: 'center',
+		padding: 10,
+		margin: 5,
+		borderRadius: 4,
+	},
+	buttonText: {
+		fontSize: theme.fontSizes.body,
+		color: theme.colors.appBarText,
+		fontWeight: 'bold',
+	},
+});
+
+export const RepositoryItem = ({ item, singleView }) => {
 
 	const stars = item.stargazersCount > 1000 
 	? `${Math.round((item.stargazersCount / 1000) * 10) / 10}k` 
@@ -11,65 +87,6 @@ const RepositoryItem = ({ item }) => {
 	const forks = item.forksCount > 1000 
 	? `${Math.round((item.forksCount / 1000) * 10) / 10}k` 
 	: item.forksCount; 
-
-	const style = StyleSheet.create({
-		card: {
-			backgroundColor: theme.colors.repoItemBackground,
-			padding: 10,
-			flexDirection: 'column'
-		},
-		imgInforContainer: {
-			flexDirection: 'row',
-			marginBottom: 10,
-		},
-		imgContainer: {
-			maxWidth: 60,
-			maxHeight: 60,
-		},
-		img: {
-			width: 50,
-			height: 50,
-			borderRadius: 5,
-			marginRight: 10,
-		},
-		infoContainer: {
-			display: "flex",
-			flexDirection: 'column',
-			alignItems: 'flex-start',
-			flexShrink: 1,
-		},
-		nameContainer: {
-			flexGrow: 0,
-			marginBottom: 5,
-		},
-		name: {
-			fontSize: theme.fontSizes.subheading,
-			fontWeight: 'bold',
-		},
-		descContainer: {
-			marginBottom: 5,
-		},
-		langTagContainer: {
-			flex: 1,
-			backgroundColor: theme.colors.primary,
-			alignItems: 'center', 
-			justifyContent: 'center',
-			padding: 3,
-			borderRadius: 4,
-		},
-		langTag: {
-			fontSize: theme.fontSizes.body,
-			color: theme.colors.appBarText, 
-		},
-		statsContainer: {
-			flexDirection: 'row',
-			justifyContent: 'space-evenly',
-		},
-		statItem: {
-			flexDirection: 'column',
-			alignItems: 'center',
-		}
-	});
 
 	return (
 		<View testID="repositoryItem" style={style.card}>
@@ -110,8 +127,47 @@ const RepositoryItem = ({ item }) => {
 					<Text>Rating</Text>
 				</View>
 			</View>
+			{singleView && (
+				<Pressable onPress={() => Linking.openURL(item.url)}>
+					<View style={style.button}>
+						<Text style={style.buttonText}>Open in Github</Text>
+					</View>
+				</Pressable>
+			)}
 		</View>
 	);
 };
 
-export default RepositoryItem;
+const RepositoryItemContainer = ({ item, singleView }) => {
+
+	const navigate = useNavigate();
+
+	if (singleView) {
+		let { id } = useParams();
+		const { repository } = useRepository(id);
+		item = repository;
+	}
+	
+	if (!item) {
+		return (<Text>Loading...</Text>)
+	}
+
+	if (singleView) {
+		return (
+			<RepositoryItem item={item} singleView={singleView} />
+		);
+	}
+
+	const onPress = (event) => {
+		event.preventDefault();
+		navigate(`/${item.id}`);
+	}
+
+	return (
+		<Pressable onPress={onPress}>
+			<RepositoryItem item={item} singleView={singleView} />
+		</Pressable>
+	);
+};
+
+export default RepositoryItemContainer;
