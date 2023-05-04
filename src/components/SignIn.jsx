@@ -64,22 +64,24 @@ const SignIn = () => {
 
   return (
     <View style={styles.container}>
-      <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
-      {({ handleSubmit }) => <SignInForm onSubmit={handleSubmit} />}
-    </Formik>
+      <SignInForm onSubmit={onSubmit} />
     </View>
   );
 };
 
-const SignInForm = ({ onSubmit }) => {
+export const SignInForm = ({ onSubmit }) => {
   return (
+    <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
+    {({ handleSubmit }) =>(
     <View>
-      <FormikTextInput name="username" placeholder="Username" style={styles.formTextField} />
-      <FormikTextInput secureTextEntry name="password" placeholder="Password" style={styles.formTextField} />
-      <Pressable style={styles.button} onPress={onSubmit} >
-        <Text style={styles.buttonText}>Sign in</Text>
-      </Pressable>
+        <FormikTextInput name="username" placeholder="Username" style={styles.formTextField} />
+        <FormikTextInput secureTextEntry name="password" placeholder="Password" style={styles.formTextField} />
+        <Pressable style={styles.button} onPress={handleSubmit} >
+          <Text style={styles.buttonText}>Sign in</Text>
+        </Pressable>
     </View>
+    )}
+    </Formik>
   );
 }
 
