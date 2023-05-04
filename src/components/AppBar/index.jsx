@@ -47,6 +47,7 @@ const AppBar = () => {
 	<View style={styles.container}>
 		<ScrollView horizontal>
 			<AppBarTab viewStyle={styles.flexItemA} text={'Repositories'} route={'/'} />
+      {data.me && <AppBarTab viewStyle={styles.flexItemA} text={'Create a review'} route={'/createreview'} />}
 			{data.me !== null
       ? <Pressable onPress={signOut}><View style={styles.flexItemA}><Text style={styles.textSignOut}>Sign Out</Text></View></Pressable>
       : <AppBarTab viewStyle={styles.flexItemA} text={'Sign In'}  route={'/signin'}/>}
