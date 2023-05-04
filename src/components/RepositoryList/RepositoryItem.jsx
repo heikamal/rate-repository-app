@@ -1,9 +1,10 @@
-import { View, StyleSheet, Image, Pressable } from "react-native";
+import { View, StyleSheet, Image, Pressable, FlatList } from "react-native";
 import Text from "../Text";
 import theme from "../../theme";
 import useRepository from "../../hooks/useRepository";
 import { useNavigate, useParams } from "react-router-native";
 import * as Linking from 'expo-linking';
+import { format, parseISO } from "date-fns";
 
 
 const style = StyleSheet.create({
@@ -31,6 +32,7 @@ const style = StyleSheet.create({
 		flexDirection: 'column',
 		alignItems: 'flex-start',
 		flexShrink: 1,
+		padding: 5,
 	},
 	nameContainer: {
 		flexGrow: 0,
@@ -76,7 +78,26 @@ const style = StyleSheet.create({
 		color: theme.colors.appBarText,
 		fontWeight: 'bold',
 	},
+	ratingContainer: {
+		height: 50,
+		width: 50,
+		borderRadius: 50 / 2,
+		alignItems: 'center',
+		justifyContent: 'center',
+		borderWidth: 2,
+		borderColor: theme.colors.primary,
+	},
+	ratingText: {
+		color: theme.colors.primary,
+		fontSize: theme.fontSizes.subheading,
+		fontWeight: 'bold',
+	},
+	separator: {
+		height: 10,
+	},
 });
+
+const ItemSeparator = () => <View style={style.separator} />;
 
 export const RepositoryItem = ({ item, singleView }) => {
 
@@ -153,8 +174,19 @@ const RepositoryItemContainer = ({ item, singleView }) => {
 	}
 
 	if (singleView) {
+
+		const reviewNodes = item.reviews
+		? item.reviews.edges.map((edge) => edge.node)
+		: [];
+		
 		return (
-			<RepositoryItem item={item} singleView={singleView} />
+			<FlatList
+			data={reviewNodes}
+			renderItem={({ item }) => <ReviewItem review={item} />}
+			ItemSeparatorComponent={ItemSeparator}
+			keyExtractor={({ id }) => id}
+			ListHeaderComponent={(<View><RepositoryItem item={item} singleView={singleView} /><ItemSeparator/></View>)}
+			/>
 		);
 	}
 
@@ -167,6 +199,33 @@ const RepositoryItemContainer = ({ item, singleView }) => {
 		<Pressable onPress={onPress}>
 			<RepositoryItem item={item} singleView={singleView} />
 		</Pressable>
+	);
+};
+
+const ReviewItem = ({ review }) => {
+
+	if (!review) {
+		return <View></View>;
+	}
+
+	const date = format(parseISO(review.createdAt), "dd'.'MM'.'yyyy")
+	return (
+		<View style={style.card}>
+			<View style={style.imgInforContainer}>
+				<View style={style.ratingContainer} >
+					<Text style={style.ratingText}>{review.rating}</Text>
+				</View>
+				<View style={style.infoContainer}>
+					<View style={style.nameContainer}>
+						<Text style={style.name}>{review.user.username}</Text>
+					</View>
+					<View style={style.descContainer}>
+						<Text style={style.description}>{date}</Text>
+					</View>
+				</View>
+			</View>
+			<Text>{review.text}</Text>
+		</View>
 	);
 };
 

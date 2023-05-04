@@ -30,7 +30,7 @@ export const ME = gql`
 `;
 
 export const GET_SINGLE_REPOSITORY = gql`
-	query ($repositoryId: ID!) {
+	query($repositoryId: ID!)  {
 		repository(id: $repositoryId) {
 			id
 			fullName
@@ -42,6 +42,20 @@ export const GET_SINGLE_REPOSITORY = gql`
 			stargazersCount
 			language
 			url
+			reviews {
+				edges {
+					node {
+						id
+						text
+						rating
+						createdAt
+						user {
+							id
+							username
+						}
+					}
+				}
+			}
 		}
 	}
 `;
