@@ -53,11 +53,20 @@ describe('RepositoryList', () => {
 			const repositoryItems = screen.getAllByTestId('repositoryItem');
 			const [firstRepositoryItem, secondRepositoryItem] = repositoryItems;
 			
-			expect(firstRepositoryItem).toHaveTextContent("jaredpalmer.formik");
+			expect(firstRepositoryItem).toHaveTextContent("jaredpalmer/formik");
 			expect(firstRepositoryItem).toHaveTextContent("Build forms in React, without the tears");
 			expect(firstRepositoryItem).toHaveTextContent("TypeScript");
 			expect(firstRepositoryItem).toHaveTextContent("1.6kForks");
+			expect(firstRepositoryItem).toHaveTextContent("21.9kStars");
+			expect(firstRepositoryItem).toHaveTextContent("88Rating");
+			expect(firstRepositoryItem).toHaveTextContent("3Reviews");
 			expect(secondRepositoryItem).toHaveTextContent("async-library/react-async");
+			expect(secondRepositoryItem).toHaveTextContent("Flexible promise-based React data loader");
+			expect(secondRepositoryItem).toHaveTextContent("JavaScript");
+			expect(secondRepositoryItem).toHaveTextContent("69Forks");
+			expect(secondRepositoryItem).toHaveTextContent("1.8kStars");
+			expect(secondRepositoryItem).toHaveTextContent("72Rating");
+			expect(secondRepositoryItem).toHaveTextContent("3Reviews");
 		});
 	});
   });
