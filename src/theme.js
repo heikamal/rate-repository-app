@@ -12,6 +12,7 @@ const theme = {
 		textBoxBorder: '#696969',
 		textBoxText: '#808080',
 		error: '#ff0000',
+		textBoxBackground: '#ffffff',
 	},
 	fontSizes: {
 		body: 14,
