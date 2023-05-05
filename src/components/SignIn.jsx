@@ -83,6 +83,6 @@ export const SignInForm = ({ onSubmit }) => {
     )}
     </Formik>
   );
-}
+};
 
 export default SignIn;

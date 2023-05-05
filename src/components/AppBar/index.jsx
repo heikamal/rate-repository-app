@@ -51,6 +51,7 @@ const AppBar = () => {
 			{data.me !== null
       ? <Pressable onPress={signOut}><View style={styles.flexItemA}><Text style={styles.textSignOut}>Sign Out</Text></View></Pressable>
       : <AppBarTab viewStyle={styles.flexItemA} text={'Sign In'}  route={'/signin'}/>}
+      {!data.me && <AppBarTab viewStyle={styles.flexItemA} text={'Sign up'} route={'/signup'}/>}
 		</ScrollView>
 	</View>
   ); 
