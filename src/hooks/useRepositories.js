@@ -18,7 +18,6 @@ const useRepositories = ({ orderBy, orderDir, search }) => {
 
 	const fetchRepositories = () => {
 		setLoading(allRepositories.loading);
-		console.log(orderBy, orderDir, search)
 		const response = allRepositories.loading ? undefined : allRepositories.data.repositories
 		setLoading(allRepositories.loading);
 		setRepositories(response);

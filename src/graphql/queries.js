@@ -20,12 +20,25 @@ export const GET_REPOSITORIES = gql`
   }
 `;
 
-export const ME = gql`
-	query Query {
+export const GET_CURRENT_USER = gql`
+	query Query($includeReviews: Boolean = false) {
 		me {
-			id
 			username
-		}
+			reviews @include(if: $includeReviews) {
+			  edges {
+				node {
+				  text
+				  rating
+				  createdAt
+				  id
+				  repository {
+					id
+					fullName
+				  }
+				}
+			  }
+			}
+		  }
 	}
 `;
 

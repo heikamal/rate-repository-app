@@ -7,6 +7,7 @@ import SignIn from './SignIn';
 import RepositoryItemContainer from './RepositoryList/RepositoryItem';
 import Review from './Review';
 import SignUp from './SignUp';
+import UserReviews from './UserReviews';
 
 const styles = StyleSheet.create({
   container: {
@@ -28,6 +29,7 @@ const Main = () => {
     <Route path='/:id' element={<RepositoryItemContainer item={null} singleView={true}/>} exact/>
     <Route path='/createreview' element={<Review />} exact/>
     <Route path='/signup' element={<SignUp />} exact/>
+    <Route path='/reviews' element={<UserReviews />} exact />
 	</Routes>
     </View>
   );
