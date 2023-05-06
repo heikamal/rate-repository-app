@@ -4,6 +4,7 @@ import useRepositories from '../../hooks/useRepositories';
 import React, { useState } from 'react';
 import {Picker} from '@react-native-picker/picker';
 import theme from '../../theme';
+import { useDebounce } from 'use-debounce';
 
 const styles = StyleSheet.create({
   separator: {
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-const RepositoryListHeader = ({ setOrderBy, setOrderDir, refetch }) => {
+const RepositoryListHeader = ({ setOrderBy, setOrderDir, refetch, setSearch, search }) => {
   const [sort, setSort] = useState('latest');
 
   const sorting = (value) => {
@@ -56,7 +57,8 @@ const RepositoryListHeader = ({ setOrderBy, setOrderDir, refetch }) => {
   return (
     <View style={styles.headerContainer}>
       <TextInput
-      onValueChange={(value) => console.log(value)}
+      onChange={(event) => {setSearch(event.nativeEvent.text)}}
+      value={search}
       style={styles.formTextField}/>
       <Picker
         style={styles.picker}
@@ -76,9 +78,9 @@ const RepositoryListHeader = ({ setOrderBy, setOrderDir, refetch }) => {
 
 export class RepositoryListContainer extends React.Component {
   renderHeader = () => {
-    const { setOrderBy, setOrderDir, refetch } = this.props;
+    const { setOrderBy, setOrderDir, refetch, setSearch, search } = this.props;
 
-    return (<RepositoryListHeader setOrderBy={setOrderBy} setOrderDir={setOrderDir} refetch={refetch} />);
+    return (<RepositoryListHeader setOrderBy={setOrderBy} setOrderDir={setOrderDir} refetch={refetch} setSearch={setSearch} search={search} />);
   };
 
   render() {
@@ -99,17 +101,18 @@ export class RepositoryListContainer extends React.Component {
     )}
     />
     );
-  };
+  }
 }
 
 const RepositoryList = () => {
   const [ orderBy, setOrderBy ] = useState('CREATED_AT');
   const [ orderDir, setOrderDir ] = useState('DESC');
-  const [ search, setSearch ] = useState('');
+  const [ searchText, setSearchText ] = useState('');
+  const [ search ] = useDebounce(searchText, 500);
 
   const { repositories, refetch } = useRepositories({orderBy, orderDir, search});
   
-  return <RepositoryListContainer repositories={repositories} setOrderBy={setOrderBy} setOrderDir={setOrderDir} refetch={refetch} />;
+  return <RepositoryListContainer repositories={repositories} setOrderBy={setOrderBy} setOrderDir={setOrderDir} refetch={refetch} setSearch={setSearchText} search={searchText} />;
 };
 
 export default RepositoryList;
