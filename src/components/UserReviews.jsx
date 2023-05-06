@@ -1,9 +1,12 @@
-import { FlatList, StyleSheet, View } from "react-native";
+import { Alert, FlatList, Pressable, StyleSheet, View } from "react-native";
 import Text from "./Text";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { GET_CURRENT_USER } from "../graphql/queries";
 import { format, parseISO } from "date-fns";
 import theme from "../theme";
+import { useNavigate } from "react-router-native";
+import { Link } from "react-router-native";
+import { DELETE_REVIEW } from "../graphql/mutations";
 
 const styles = StyleSheet.create({
 	card: {
@@ -70,6 +73,7 @@ const styles = StyleSheet.create({
 		padding: 10,
 		margin: 5,
 		borderRadius: 4,
+		flex: 1,
 	},
 	buttonText: {
 		fontSize: theme.fontSizes.body,
@@ -93,18 +97,42 @@ const styles = StyleSheet.create({
 	separator: {
 		height: 10,
 	},
+	buttonsContainer: {
+		flexDirection: 'row',
+		flex: 1,
+	},
+	deleteButton: {
+		backgroundColor: theme.colors.error,
+		alignItems: 'center', 
+		justifyContent: 'center',
+		padding: 10,
+		margin: 5,
+		borderRadius: 4,
+		flex: 1,
+	}
 });
 
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
 const UserReviews = () => {
-	const { loading, data } = useQuery(GET_CURRENT_USER, {
+	const { loading, data, refetch } = useQuery(GET_CURRENT_USER, {
 		fetchPolicy: 'cache-and-network',
 		variables: {
 			includeReviews: true
 		},
 	});
+
+	const [onDeleteHandler] = useMutation(DELETE_REVIEW, {
+		onError: (error) => {
+			console.log("ERROR:", error);
+		},
+	}) 
+
+	const deleteReview = (id) => {
+		onDeleteHandler({ variables: { deleteReviewId: id } })
+		refetch();
+	};
 
 
 	if (loading) {
@@ -120,18 +148,30 @@ const UserReviews = () => {
 	return(
 		<FlatList
 			data={reviewNodes}
-			renderItem={({ item }) => <ReviewItem review={item} />}
+			renderItem={({ item }) => <ReviewItem review={item} onDelPress={deleteReview}/>}
 			ItemSeparatorComponent={ItemSeparator}
 			keyExtractor={({ id }) => id}
 			/>
 	);
 };
 
-const ReviewItem = ({ review }) => {
+const ReviewItem = ({ review, onDelPress }) => {
 	console.log(review)
 
 	if (!review.repository.fullName) {
 		return <View></View>;
+	}
+
+	const deleteRevi = (event) => {
+		event.preventDefault();
+		Alert.alert('Delete review', 'Are you sure you want to delete this review?', [
+			{
+				text: 'Cancel',
+				onPress: () => console.log('Cancel Pressed'),
+				style: 'cancel',
+			},
+			{text: 'Delete', onPress: () => onDelPress(review.id)},
+		]);
 	}
 	
 
@@ -152,6 +192,18 @@ const ReviewItem = ({ review }) => {
 				</View>
 			</View>
 			<Text>{review.text}</Text>
+			<View style={styles.buttonsContainer}>
+				<Link to={`/${review.repository.id}`}>
+					<View style={styles.button}>
+							<Text style={styles.buttonText}>View repository</Text>
+					</View>
+				</Link>
+				<Pressable onPress={deleteRevi}>
+					<View style={styles.deleteButton}>
+						<Text style={styles.buttonText}>Delete review</Text>
+					</View>
+				</Pressable>
+			</View>
 		</View>
 	);
 };
