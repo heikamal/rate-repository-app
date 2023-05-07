@@ -84,7 +84,7 @@ export class RepositoryListContainer extends React.Component {
   };
 
   render() {
-  const repositories = this.props.repositories;
+  const { repositories, onEndReach } = this.props;
   
 
   const repositoryNodes = repositories
@@ -96,6 +96,8 @@ export class RepositoryListContainer extends React.Component {
     data={repositoryNodes}
     ItemSeparatorComponent={ItemSeparator}
     ListHeaderComponent={this.renderHeader}
+    onEndReached={onEndReach}
+    onEndReachedThreshold={0.5}
     renderItem={({item}) => (
       <RepositoryItemContainer item={item} singleView={false} />
     )}
@@ -110,9 +112,21 @@ const RepositoryList = () => {
   const [ searchText, setSearchText ] = useState('');
   const [ search ] = useDebounce(searchText, 500);
 
-  const { repositories, refetch } = useRepositories({orderBy, orderDir, search});
+  const { repositories, refetch, fetchMore } = useRepositories({orderBy, orderDir, search});
+  const onEndReach = () => {
+    fetchMore();
+  };
   
-  return <RepositoryListContainer repositories={repositories} setOrderBy={setOrderBy} setOrderDir={setOrderDir} refetch={refetch} setSearch={setSearchText} search={searchText} />;
+  return (
+    <RepositoryListContainer
+    repositories={repositories}
+    setOrderBy={setOrderBy}
+    setOrderDir={setOrderDir}
+    refetch={refetch}
+    setSearch={setSearchText}
+    search={searchText}
+    onEndReach={onEndReach}
+    />);
 };
 
 export default RepositoryList;

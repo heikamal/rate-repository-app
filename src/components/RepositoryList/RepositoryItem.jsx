@@ -162,11 +162,15 @@ export const RepositoryItem = ({ item, singleView }) => {
 const RepositoryItemContainer = ({ item, singleView }) => {
 
 	const navigate = useNavigate();
+	let onEndReach = () => {};
 
 	if (singleView) {
 		let { id } = useParams();
-		const { repository } = useRepository(id);
+		const { repository, fetchMore } = useRepository(id);
 		item = repository;
+		onEndReach = () => {
+			fetchMore();
+		};
 	}
 	
 	if (!item) {
@@ -174,7 +178,6 @@ const RepositoryItemContainer = ({ item, singleView }) => {
 	}
 
 	if (singleView) {
-
 		const reviewNodes = item.reviews
 		? item.reviews.edges.map((edge) => edge.node)
 		: [];
@@ -183,6 +186,7 @@ const RepositoryItemContainer = ({ item, singleView }) => {
 			<FlatList
 			data={reviewNodes}
 			renderItem={({ item }) => <ReviewItem review={item} />}
+			onEndReached={onEndReach}
 			ItemSeparatorComponent={ItemSeparator}
 			keyExtractor={({ id }) => id}
 			ListHeaderComponent={(<View><RepositoryItem item={item} singleView={singleView} /><ItemSeparator/></View>)}

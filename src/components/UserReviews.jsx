@@ -4,7 +4,6 @@ import { useMutation, useQuery } from "@apollo/client";
 import { GET_CURRENT_USER } from "../graphql/queries";
 import { format, parseISO } from "date-fns";
 import theme from "../theme";
-import { useNavigate } from "react-router-native";
 import { Link } from "react-router-native";
 import { DELETE_REVIEW } from "../graphql/mutations";
 
